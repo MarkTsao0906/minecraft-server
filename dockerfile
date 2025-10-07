@@ -1,11 +1,17 @@
-FROM openjdk:21-jdk-slim
+# 使用官方 Java 17（Minecraft 1.18+ 版本都支援）
+FROM openjdk:17-jdk-slim
 
+# 設定工作目錄
 WORKDIR /app
-COPY . /app
 
-RUN apt-get update && apt-get install -y curl && \
-    curl -o paper.jar https://api.papermc.io/v2/projects/paper/versions/1.21/builds/123/downloads/paper-1.21-123.jar && \
-    chmod +x start.sh
+# 複製所有檔案進容器
+COPY . .
 
+# 同意 EULA（若 eula.txt 不存在就自動建立）
+RUN echo "eula=true" > eula.txt
+
+# 開放 Minecraft 埠
 EXPOSE 25565
-CMD ["bash", "start.sh"]
+
+# 啟動伺服器
+CMD ["java", "-Xmx1G", "-Xms512M", "-jar", "server.jar", "nogui"]
