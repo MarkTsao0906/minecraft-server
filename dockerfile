@@ -1,17 +1,17 @@
-# 使用官方 Java 17（Minecraft 1.18+ 版本都支援）
+# 使用官方 Java 17 slim 版本
 FROM openjdk:17-jdk-slim
 
 # 設定工作目錄
 WORKDIR /app
 
-# 複製所有檔案進容器
+# 複製專案檔案到容器
 COPY . .
 
-# 同意 EULA（若 eula.txt 不存在就自動建立）
-RUN echo "eula=true" > eula.txt
+# 安裝必要工具（可選）
+RUN apt-get update && apt-get install -y curl && apt-get clean
 
 # 開放 Minecraft 埠
 EXPOSE 25565
 
-# 啟動伺服器
-CMD ["java", "-Xmx1G", "-Xms512M", "-jar", "server.jar", "nogui"]
+# 啟動指令
+CMD ["bash", "start.sh"]
